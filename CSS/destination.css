@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: #abd6f5;
+}
+
+
+/* Page Title */
+.page-title {
+    text-align: center;
+    padding: 40px 0 20px;
+    color: #0066cc;
+}
+
+.page-title p {
+    margin-top: 5px;
+    font-size: 15px;
+    color: #004a99;
+}
+
+/* Category Tabs */
+.category-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    /* margin-bottom: 30px; */
+}
+
+.category-tabs button {
+    background: #63b3ff;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.category-tabs button:hover {
+    background: #0077eb;
+}
+
+/* Destination Cards */
+.destination-title{
+    /* border: 1px solid black; */
+    color: #063c47;
+    font-size: 28px;
+    font-weight: bolder;
+    margin: auto;
+    width: 94%;
+    padding: 1rem;
+   
+}
+
+.destinations-container {
+    width: 95%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding-bottom: 50px;
+}
+
+.destination-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    overflow: hidden;
+    text-align: center;
+    transition: .3s;
+}
+
+.destination-card:hover {
+    transform: scale(1.06);
+}
+
+.destination-card img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+}
+
+.destination-card h3 {
+    color: #0077eb;
+    margin: 12px 0 5px;
+}
+
+.destination-card p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.tag {
+    font-size: 12px;
+    background: #086ec7a7;
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 100px;
+    color: #090909;
+    margin-bottom: 12px;
+    display: inline-block;
+}
+
+
+
+/* Footer */
+
+.footer {
+    /* border: 1px solid black; */ 
+    width: 100%;
+    height: 50px;
+    padding-left: 10px;
+    background: #63b3ff;
+    bottom: 0px;
+    /* position: fixed; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
