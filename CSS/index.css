@@ -52,7 +52,7 @@
     padding-left: 10px;
     background: #63b3ff;
     bottom: 0px;
-    /* position: fixed; */
+    position: fixed;
     display: flex;
     align-items: center;
     justify-content: center;

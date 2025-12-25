@@ -5,6 +5,7 @@
 
 body {
     background: #abd6f5;
+    overflow-x: hidden;
 }
 
 .main {
