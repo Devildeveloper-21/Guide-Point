@@ -3,69 +3,530 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Navbar</title>
-    <link rel="stylesheet" href="./CSS/style.css" />
+    <title>Guide Point</title>
+    <link rel="shortcut icon" href="images/logo.svg" type="image/x-icon" />
     <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="navbar">
-      
-      <div class="logo-name-container">
-        <div class="inner-container">
-          <img src="../Guide-Point/images/logo.jpg" alt="logo" />
+    <nav>
+      <div class="logo">
+        <img src="images/logo.svg" alt="logo" onclick="location.reload()" />
+        <div class="name">Guide Point</div>
+      </div>
+      <div class="nav-links">
+        <button
+          id="btn-admin"
+          class="adminView"
+          onclick="openModal('admin-modal')"
+          style="border: 1px solid var(--primary); color: var(--primary)"
+        >
+          + New City
+        </button>
+        <button
+          id="btn-login"
+          class="btn-primary"
+          onclick="openModal('auth-modal')"
+        >
+          Login
+        </button>
+        <button id="btn-logout" class="adminView" onclick="logout()">
+          Logout
+        </button>
+      </div>
+    </nav>
+
+    <header>
+      <h1>Explore The World</h1>
+      <p>Discover beautiful destinations, view maps, and plan your stay.</p>
+    </header>
+
+    <div class="container">
+      <div class="toolbar">
+        <div class="search-wrapper">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search"
+            onkeyup="filterCities()"
+          />
         </div>
+        <select id="sort-select" class="sort-select" onchange="renderCities()">
+          <option value="default">Sort by: Default</option>
+          <option value="likes">My Favorites</option>
+          <option value="name">Name (A-Z)</option>
+        </select>
       </div>
 
-      <div class="cnt_btn">
-        <div class="nb_content">
-          <div>
-            <li><a href="#">Home</a></li>
-          </div>
-          <div>
-            <li><a href="./HTML/destination.html">Destinations</a></li>
-          </div>
-          <div>
-            <li><a href="./HTML/About.html">About</a></li>
-          </div>
-          <div>
-            <li><a href="./HTML/contact.html">Contact</a></li>
-          </div>
-        </div>
+      <div id="city-grid" class="city-grid"></div>
+      <p
+        id="no-results"
+        style="display: none; text-align: center; color: #64748b"
+      >
+        No destinations found.
+      </p>
+    </div>
 
-        <div class="sign_button">
-          <a href="./HTML/login.html"><button>Sign in</button></a>
+    <div id="details-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('details-modal')">×</span>
+        <img id="modal-img" class="modal-header-img" src="" />
+        <div class="modal-body">
+          <h2 id="modal-title" style="margin: 0"></h2>
+          <p
+            id="modal-desc"
+            style="color: #64748b; line-height: 1.6; margin-top: 10px"
+          ></p>
+
+          <div class="section-title">
+            <i class="fas fa-camera"></i> Top Attractions
+          </div>
+          <div id="modal-attractions" class="attractions-grid"></div>
+
+          <div class="section-title">
+            <i class="fas fa-map-marked-alt"></i> Location Map
+          </div>
+          <div class="map-container">
+            <iframe
+              id="modal-map"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+
+          <div class="section-title">
+            <i class="fas fa-hotel"></i> Nearby Hotels
+          </div>
+          <div id="modal-hotels"></div>
         </div>
       </div>
     </div>
 
-    <div class="image_cont">
-      <div>
-        <div class="wltxt">
-          <p>Welcome to Guide Point.</p>
-        </div>
-
-        <div class="title">
-          <h1>Your ultimate guide to</h1>
-          <h1>top travel destinations worldwide.</h1>
-        </div>
-
-        <div class="ex_mr">
-          <div><a href="">Explore now </a></div>
-          <div class="ar_img"><img src="./SVG's/arrow.svg" alt="" /></div>
-        </div>
+    <div
+      id="image-modal"
+      class="modal"
+      style="background: rgba(0, 0, 0, 0.9)"
+      onclick="closeImageModal(event)"
+    >
+      <span
+        class="close-modal"
+        style="
+          color: white;
+          z-index: 101;
+          font-size: 2rem;
+          background: rgba(255, 255, 255, 0.2);
+          top: 30px;
+          right: 30px;
+        "
+        >×</span
+      >
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+        "
+      >
+        <img
+          id="full-image"
+          src=""
+          style="
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 12px;
+            pointer-events: auto;
+          "
+        />
       </div>
     </div>
 
-    <div class="footer">
-      <p>&copy; 2026 Guide Point. All Rights Reserved.</p>
+    <div id="admin-modal" class="modal">
+      <div class="modal-content" style="max-width: 500px; padding: 2rem">
+        <span
+          class="close-modal-icon"
+          style="background: transparent; color: black; top: 10px; right: 10px"
+          onclick="closeModal('admin-modal')"
+          >×</span
+        >
+        <h2 style="margin-top: 0">Add Destination</h2>
+        <form onsubmit="handleAddCity(event)">
+          <div class="form-group">
+            <label>City Name</label>
+            <input
+              type="text"
+              id="city-name"
+              required
+              placeholder="e.g. Rome, Italy"
+            />
+          </div>
+          <div class="form-group">
+            <label>City Cover Image</label>
+            <input type="url" id="city-image" required />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="city-desc" rows="2" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Attractions / Places to Visit</label>
+            <textarea
+              id="city-attractions"
+              rows="4"
+              placeholder="Eiffel Tower | http://img.com/1.jpg | Description..."
+            ></textarea>
+            <div class="helper-text">
+              Format: <b>Name | Image URL | Description</b> (New line for each)
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Hotels</label>
+            <textarea
+              id="city-hotels"
+              rows="2"
+              placeholder="The Ritz | 5.0, Holiday Inn | 4.2"
+              required
+            ></textarea>
+            <div class="helper-text">
+              Format: <b>Name | Rating</b> (Comma separated)
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Save City</button>
+        </form>
+      </div>
     </div>
-    <script type="module" src="src/main.js"></script>
+
+    <div id="auth-modal" class="modal">
+      <div class="modal-content" style="max-width: 350px; padding: 2rem">
+        <span class="close-modal-icon" onclick="closeModal('auth-modal')"
+          >×</span
+        >
+        <h2 style="text-align: center">Login</h2>
+        <form onsubmit="handleLogin(event)">
+          <input
+            type="email"
+            value="admin@test.com"
+            style="
+              width: 100%;
+              padding: 10px;
+              margin-bottom: 10px;
+              border-radius: 8px;
+              border: 1px solid #ccc;
+            "
+          />
+          <input
+            type="password"
+            value="123456"
+            style="
+              width: 100%;
+              padding: 10px;
+              margin-bottom: 20px;
+              border-radius: 8px;
+              border: 1px solid #ccc;
+            "
+          />
+          <button
+            type="submit"
+            class="btn-primary"
+            style="width: 100%; padding: 10px"
+          >
+            Enter
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // --- DATA ---
+      const defaultCities = [
+        {
+          id: 1,
+          name: "Paris, France",
+          image:
+            "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600",
+          desc: "The city of lights, known for its cafe culture, fashion, and art.",
+          hotels: [
+            { name: "Ritz Paris", rating: 4.9 },
+            { name: "Hilton Opera", rating: 4.6 },
+          ],
+          attractions: [
+            {
+              name: "Eiffel Tower",
+              img: "https://images.unsplash.com/photo-1543349689-9a4d426bee8e?w=400",
+              desc: "Famous iron lady of Paris.",
+            },
+            {
+              name: "Louvre Museum",
+              img: "https://images.unsplash.com/photo-1499856871940-a09627c6dcf6?w=400",
+              desc: "Home of the Mona Lisa.",
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Goa, India",
+          image:
+            "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600",
+          desc: "Tropical paradise with beaches and nightlife.",
+          hotels: [
+            { name: "Taj Exotica", rating: 4.8 },
+            { name: "W Goa", rating: 4.5 },
+          ],
+          attractions: [
+            {
+              name: "Baga Beach",
+              img: "https://images.unsplash.com/photo-1548021682-1720ed403a5b?w=400",
+              desc: "Popular beach for water sports.",
+            },
+            {
+              name: "Fort Aguada",
+              img: "https://images.unsplash.com/photo-1590495133606-5b62b083c749?w=400",
+              desc: "17th-century Portuguese fort.",
+            },
+          ],
+        },
+      ];
+
+      let cities = JSON.parse(localStorage.getItem("cities")) || defaultCities;
+      let likedIds = JSON.parse(localStorage.getItem("likes")) || [];
+      let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+      // --- SEARCH & FILTER ---
+      function filterCities() {
+        const query = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+        const cards = document.querySelectorAll(".card");
+        let hasVisible = false;
+
+        cards.forEach((card) => {
+          const name = card
+            .querySelector(".card-title")
+            .innerText.toLowerCase();
+          if (name.includes(query)) {
+            card.style.display = "block";
+            hasVisible = true;
+          } else {
+            card.style.display = "none";
+          }
+        });
+        document.getElementById("no-results").style.display = hasVisible
+          ? "none"
+          : "block";
+      }
+
+      // --- RENDER ---
+      function renderCities() {
+        const grid = document.getElementById("city-grid");
+        grid.innerHTML = "";
+        let displayCities = [...cities];
+        const sortType = document.getElementById("sort-select").value;
+
+        if (sortType === "name")
+          displayCities.sort((a, b) => a.name.localeCompare(b.name));
+        else if (sortType === "likes") {
+          displayCities.sort((a, b) => {
+            const aLiked = likedIds.includes(a.id);
+            const bLiked = likedIds.includes(b.id);
+            return aLiked === bLiked ? 0 : aLiked ? -1 : 1;
+          });
+        } else {
+          displayCities.sort((a, b) => a.id - b.id);
+        }
+
+        displayCities.forEach((city) => {
+          const isLiked = likedIds.includes(city.id);
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <button class="like-btn ${
+              isLiked ? "liked" : ""
+            }" onclick="toggleLike(${
+            city.id
+          }, event)"><i class="fas fa-heart"></i></button>
+            <img src="${city.image}" alt="${city.name}">
+            <div class="card-content" onclick="showDetails(${city.id})">
+                <div class="card-title">${city.name}</div>
+                <div class="card-desc-short">${city.desc}</div>
+            </div>`;
+          grid.appendChild(card);
+        });
+        filterCities();
+      }
+
+      function showDetails(id) {
+        const city = cities.find((c) => c.id === id);
+        document.getElementById("modal-img").src = city.image;
+        document.getElementById("modal-title").innerText = city.name;
+        document.getElementById("modal-desc").innerText = city.desc;
+
+        // Map
+        const mapQuery = encodeURIComponent(city.name);
+        document.getElementById(
+          "modal-map"
+        ).src = `https://maps.google.com/maps?q=${mapQuery}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+
+        // Render Attractions
+        const attrDiv = document.getElementById("modal-attractions");
+        attrDiv.innerHTML = "";
+        if (city.attractions && city.attractions.length > 0) {
+          city.attractions.forEach((attr) => {
+            const card = document.createElement("div");
+            card.className = "attraction-card";
+            card.innerHTML = `
+                    <img src="${attr.img}" class="attraction-img" onclick="openImageModal('${attr.img}')">
+                    <div class="attraction-info">
+                        <div class="attraction-name">${attr.name}</div>
+                        <div class="attraction-desc">${attr.desc}</div>
+                    </div>
+                `;
+            attrDiv.appendChild(card);
+          });
+        } else {
+          attrDiv.innerHTML =
+            "<p style='grid-column:1/-1; color:#999; font-size:0.9rem;'>No specific attractions added.</p>";
+        }
+
+        // Hotels (Handle both old string array and new object array)
+        const hotelsDiv = document.getElementById("modal-hotels");
+        hotelsDiv.innerHTML = "";
+        (city.hotels || []).forEach((h) => {
+          const div = document.createElement("div");
+          div.className = "list-item";
+
+          let name = h;
+          let rating = 4.5; // default for old data
+
+          if (typeof h === "object") {
+            name = h.name;
+            rating = h.rating;
+          }
+
+          div.innerHTML = `<span>${name}</span> <small style="color:#f59e0b"><i class="fas fa-star"></i> ${rating}</small>`;
+          hotelsDiv.appendChild(div);
+        });
+
+        openModal("details-modal");
+      }
+
+      // --- ADMIN: ADD CITY ---
+      function handleAddCity(e) {
+        e.preventDefault();
+
+        // Parse Attractions
+        const attrRaw = document.getElementById("city-attractions").value;
+        const attractions = [];
+        if (attrRaw.trim()) {
+          attrRaw.split("\n").forEach((line) => {
+            const parts = line.split("|");
+            if (parts.length >= 2) {
+              attractions.push({
+                name: parts[0].trim(),
+                img: parts[1].trim(),
+                desc: parts[2] ? parts[2].trim() : "",
+              });
+            }
+          });
+        }
+
+        // Parse Hotels (Name | Rating)
+        const hotelRaw = document.getElementById("city-hotels").value;
+        const hotels = hotelRaw.split(",").map((h) => {
+          const parts = h.split("|");
+          return {
+            name: parts[0].trim(),
+            rating: parts[1] ? parseFloat(parts[1].trim()) : 4.5,
+          };
+        });
+
+        const newCity = {
+          id: Date.now(),
+          name: document.getElementById("city-name").value,
+          image: document.getElementById("city-image").value,
+          desc: document.getElementById("city-desc").value,
+          hotels: hotels,
+          attractions: attractions,
+        };
+
+        cities.push(newCity);
+        localStorage.setItem("cities", JSON.stringify(cities));
+
+        renderCities();
+        closeModal("admin-modal");
+        e.target.reset();
+        alert("City Added Successfully!");
+      }
+
+      // --- AUTH & UTILS ---
+      function toggleLike(id, event) {
+        event.stopPropagation();
+        if (!isLoggedIn) {
+          alert("Login required");
+          openModal("auth-modal");
+          return;
+        }
+        likedIds = likedIds.includes(id)
+          ? likedIds.filter((i) => i !== id)
+          : [...likedIds, id];
+        localStorage.setItem("likes", JSON.stringify(likedIds));
+        renderCities();
+      }
+
+      function handleLogin(e) {
+        e.preventDefault();
+        isLoggedIn = true;
+        localStorage.setItem("isLoggedIn", "true");
+        updateUI();
+        closeModal("auth-modal");
+      }
+      function logout() {
+        isLoggedIn = false;
+        localStorage.setItem("isLoggedIn", "false");
+        updateUI();
+      }
+      function updateUI() {
+        const s = isLoggedIn ? "remove" : "add";
+        const i = isLoggedIn ? "add" : "remove";
+        document.getElementById("btn-login").classList[i]("adminView");
+        document.getElementById("btn-logout").classList[s]("adminView");
+        document.getElementById("btn-admin").classList[s]("adminView");
+      }
+      function openModal(id) {
+        document.getElementById(id).classList.add("active");
+      }
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("active");
+      }
+      function openImageModal(src) {
+        document.getElementById("full-image").src = src;
+        openModal("image-modal");
+      }
+      function closeImageModal(e) {
+        if (
+          e.target.id === "image-modal" ||
+          e.target.classList.contains("close-modal")
+        )
+          closeModal("image-modal");
+      }
+
+      // --- INIT ---
+      renderCities();
+      updateUI();
+    </script>
   </body>
 </html>
