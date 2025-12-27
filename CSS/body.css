@@ -2,6 +2,13 @@
   box-sizing: border-box;
 }
 
+img,
+iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 body {
   font-family: "Poppins", sans-serif;
   margin: 0;
@@ -88,6 +95,7 @@ header h1 {
   }
 
   .search-wrapper {
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
   }
 }
