@@ -9,6 +9,8 @@ import {
 import { handleLogin, logout, updateUI } from "./auth.js";
 import { handleAddCity } from "./admin.js";
 import { toggleLike } from "./like.js";
+import {formManager} from "./form.js";
+
 
 // Attach functions to window so HTML onclick attributes can find them
 window.renderCities = renderCities;
@@ -27,4 +29,5 @@ window.toggleLike = toggleLike;
 document.addEventListener("DOMContentLoaded", () => {
   renderCities();
   updateUI();
+  formManager();
 });
