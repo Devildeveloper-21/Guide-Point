@@ -1,4 +1,5 @@
-// --- DATA ---
+// Data and State Management
+
 const defaultCities = [
   {
     id: 1,
@@ -46,6 +47,28 @@ const defaultCities = [
   },
 ];
 
-let cities = JSON.parse(localStorage.getItem("cities")) || defaultCities;
-let likedIds = JSON.parse(localStorage.getItem("likes")) || [];
-let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+// State Variables
+export let cities = JSON.parse(localStorage.getItem("cities")) || defaultCities;
+export let likedIds = JSON.parse(localStorage.getItem("likes")) || [];
+
+// Save Functions
+export const saveCities = () =>
+  localStorage.setItem("cities", JSON.stringify(cities));
+export const saveLikes = () =>
+  localStorage.setItem("likes", JSON.stringify(likedIds));
+
+// Helper to add a city
+export const addNewCityToState = (newCity) => {
+  cities.push(newCity);
+  saveCities();
+};
+
+// Helper to toggle like
+export const toggleLikeState = (id) => {
+  if (likedIds.includes(id)) {
+    likedIds = likedIds.filter((i) => i !== id);
+  } else {
+    likedIds.push(id);
+  }
+  saveLikes();
+};

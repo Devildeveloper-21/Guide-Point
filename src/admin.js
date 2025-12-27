@@ -1,41 +1,47 @@
-function handleAddCity(e) {
+// Admin Logic
+import { addNewCityToState } from "./data.js";
+import { renderCities } from "./render.js";
+import { closeModal } from "./modal.js";
+
+export function handleAddCity(e) {
   e.preventDefault();
 
-  const attractions = [];
+  // Parse Attractions
   const attrRaw = document.getElementById("city-attractions").value;
-
+  const attractions = [];
   if (attrRaw.trim()) {
     attrRaw.split("\n").forEach((line) => {
       const parts = line.split("|");
-      attractions.push({
-        name: parts[0].trim(),
-        img: parts[1]?.trim(),
-        desc: parts[2]?.trim() || "",
-      });
+      if (parts.length >= 2) {
+        attractions.push({
+          name: parts[0].trim(),
+          img: parts[1].trim(),
+          desc: parts[2] ? parts[2].trim() : "",
+        });
+      }
     });
   }
 
-  const hotels = document
-    .getElementById("city-hotels")
-    .value.split(",")
-    .map((h) => {
-      const parts = h.split("|");
-      return {
-        name: parts[0].trim(),
-        rating: parts[1] ? parseFloat(parts[1]) : 4.5,
-      };
-    });
-
-  cities.push({
-    id: Date.now(),
-    name: city - name.value,
-    image: city - image.value,
-    desc: city - desc.value,
-    hotels,
-    attractions,
+  // Parse Hotels
+  const hotelRaw = document.getElementById("city-hotels").value;
+  const hotels = hotelRaw.split(",").map((h) => {
+    const parts = h.split("|");
+    return {
+      name: parts[0].trim(),
+      rating: parts[1] ? parseFloat(parts[1].trim()) : 4.5,
+    };
   });
 
-  localStorage.setItem("cities", JSON.stringify(cities));
+  const newCity = {
+    id: Date.now(),
+    name: document.getElementById("city-name").value,
+    image: document.getElementById("city-image").value,
+    desc: document.getElementById("city-desc").value,
+    hotels: hotels,
+    attractions: attractions,
+  };
+
+  addNewCityToState(newCity);
   renderCities();
   closeModal("admin-modal");
   e.target.reset();
